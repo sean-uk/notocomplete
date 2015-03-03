@@ -2,8 +2,11 @@
 
 /**
  * @file
- * @author sean
  * Adds autocomplete="off" to form text inputs
+ * 
+ * @todo hook field create/edit to make autocomplete off optional
+ * 
+ * @author sean
  */
  
  
