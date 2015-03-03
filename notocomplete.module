@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * @author sean
+ * Adds autocomplete="off" to form text inputs
+ */
+ 
+ 
+ /**
+  * implements hook_form_alter
+  */
+function notocomplete_form_alter(&$form, &$form_state, $form_id) 
+{
+}

@@ -1,0 +1,3 @@
+name = Notocomplete
+description = Set autocomplete="off" on form text inputs
+core = 7.x
