@@ -23,8 +23,8 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
         // there are also objects and strings in here ( @todo: why?)
         if( is_array($info) ) {
             
-            if( $info['type'] == 'textfield' ) {
-                drupal_set_message('There was a text field! : '. htmlentities($info['type']));
+            if( array_key_exists('#type', $info) && $info['#type'] == 'textfield' ) {
+                drupal_set_message('There was a text field! : '. htmlentities($info['#type']));
             }
         }
     }
