@@ -7,9 +7,9 @@
  */
  
  
- /**
-  * implements hook_form_alter
-  */
+/**
+ * implements hook_form_alter
+ */
 function notocomplete_form_alter(&$form, &$form_state, $form_id) 
 {
     // sanity - notify user of unknown error
@@ -28,4 +28,46 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
             }
         }
     }
+}
+
+/**
+ * scan an array for sub-arrays having a specific key with a specific value and perform some operation on them
+ *
+ * ie; scan for any sub-arrays where 'X' => Y then call a function that sets it to Z.
+ * warning: recursive!
+ * 
+ * @todo log something helpful on error
+ * 
+ * @param array $array scan for nested arrays in here
+ * @param string $field scan for this key
+ * @param mixed $value scan for this value (strict)
+ * @param string $operation the function to run on matching sub-arrays
+ * @return array|bool the modified array, or false on error
+ */
+function arrayScanAndTransform($array, $field, $value, $operation)
+{
+    // sanity
+    if( !is_array($array) ) {
+        return false;
+    }
+    if( !function_exists($operation) ) {
+        return false;
+    }
+    
+    // iterate over array
+    foreach( $array as $key=>$val ) {
+        
+        // check for sub-arrays, do recursion
+        if( is_array($val) ) {
+            $val = arrayScanAndTransform($val, $field, $value, $operation);
+            $array[$key] = $val;
+        }
+        
+        // check for matches. if found, operate on the array
+        if( $key==$field && $val===$value ) {
+            $array = $operation($array);
+        }
+    }    
+    
+    return $array;
 }
