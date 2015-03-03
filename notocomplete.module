@@ -18,22 +18,14 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
     }
     
     // now go over each of the form fields looking for a plain text type
-    foreach( $form as $field=>$info ) {
-        
-        // there are also objects and strings in here ( @todo: why?)
-        if( is_array($info) ) {
-            
-            if( array_key_exists('#type', $info) && $info['#type'] == 'textfield' ) {
-                drupal_set_message('There was a text field! : '. htmlentities($info['#type']));
-            }
-        }
-    }
+    $form = arrayScanAndTransform($form, '#type', 'textfield', 'setAutocomplete');
 }
 
 /**
  * scan an array for sub-arrays having a specific key with a specific value and perform some operation on them
  *
  * ie; scan for any sub-arrays where 'X' => Y then call a function that sets it to Z.
+ * not using array_walk_recursive because it needs to operate on the whole array, rather than the item
  * warning: recursive!
  * 
  * @todo log something helpful on error
@@ -47,10 +39,10 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
 function arrayScanAndTransform($array, $field, $value, $operation)
 {
     // sanity
-    if( !is_array($array) ) {
+    if (!is_array($array)) {
         return false;
     }
-    if( !function_exists($operation) ) {
+    if (!function_exists($operation)) {
         return false;
     }
     
@@ -58,16 +50,50 @@ function arrayScanAndTransform($array, $field, $value, $operation)
     foreach( $array as $key=>$val ) {
         
         // check for sub-arrays, do recursion
-        if( is_array($val) ) {
+        if (is_array($val)) {
             $val = arrayScanAndTransform($val, $field, $value, $operation);
             $array[$key] = $val;
         }
         
         // check for matches. if found, operate on the array
-        if( $key==$field && $val===$value ) {
+        if ($key==$field && $val===$value) {
             $array = $operation($array);
         }
     }    
+    
+    return $array;
+}
+
+/**
+ * insert the autocomplete=off key into an array (oversetting if it exists)
+ * 
+ * @todo log something helpful on error
+ * 
+ * @link http://www.midwesternmac.com/blogs/jeff-geerling/disabling-autocomplete-forms @endlink
+ * @link https://api.drupal.org/api/drupal/developer!topics!forms_api_reference.html/7#attributes @endlink
+ * 
+ * @param array $array
+ * @return array|bool the modified array, or false on error
+ */
+function setAutocomplete(&$array)
+{
+    // sanity
+    if (!is_array($array)) {
+        return false;
+    }
+    
+    // weird edge case: #attributes exists, but it's not an array
+    if (array_key_exists('#attributes', $array) && !is_array($array['#attributes'])) {
+        return FALSE;
+    }
+    
+    // create if not exists
+    if (!array_key_exists('#attributes', $array)) {
+        $array['#attributes'] = array();
+    }
+    
+    // now set the autocomplete field
+    $array['#attributes']['autocomplete'] = 'off';
     
     return $array;
 }
