@@ -69,8 +69,8 @@ function arrayScanAndTransform($array, $field, $value, $operation)
  * 
  * @todo log something helpful on error
  * 
- * @link http://www.midwesternmac.com/blogs/jeff-geerling/disabling-autocomplete-forms @endlink
- * @link https://api.drupal.org/api/drupal/developer!topics!forms_api_reference.html/7#attributes @endlink
+ * @see http://www.midwesternmac.com/blogs/jeff-geerling/disabling-autocomplete-form
+ *      https://api.drupal.org/api/drupal/developer!topics!forms_api_reference.html/7#attributes
  * 
  * @param array $array
  * @return array|bool the modified array, or false on error
