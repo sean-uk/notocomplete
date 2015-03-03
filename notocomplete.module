@@ -12,4 +12,15 @@
   */
 function notocomplete_form_alter(&$form, &$form_state, $form_id) 
 {
+    // sanity - notify user of unknown error
+    if( !$form || empty($form) ) {
+        drupal_set_message('Notocomplete: Form not recognised', 'error');
+    }
+    
+    // now go over each of the form fields looking for a plain text type
+    foreach( $form as $field=>$info ) {
+        if( $info['type']=='textfield' ) {
+            drupal_set_message('There was a text field! : '. htmlentities($info['type']) );
+        }
+    }
 }
