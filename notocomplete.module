@@ -61,8 +61,11 @@ function arrayScanAndTransform($array, $field, $value, $operation)
         // check for matches. if found, operate on the array
         if ($key==$field && $val===$value) {
             $array = $operation($array);
+            
+            // @todo this is just a stopgap, find out why this doesn't work without it!
+            return $array;
         }
-    }    
+    }
     
     return $array;
 }
