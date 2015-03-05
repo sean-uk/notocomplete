@@ -3,6 +3,8 @@
 /**
  * @file
  * Adds autocomplete="off" to form text inputs
+ * (this is only the *browser* autocomplete which remembmers previous values,
+ * it doesn't affect ajax autocomplete, which is what the term usually refers to)
  * 
  * @todo hook field create/edit to make autocomplete off optional
  * 
@@ -50,12 +52,12 @@ function arrayScanAndTransform($array, $field, $value, $operation)
     }
     
     // iterate over array
-    foreach( $array as $key=>$val ) {
+    // (must do by ref, otherwise only a copy of sub-arrays will be transformed)
+    foreach( $array as $key=>&$val ) {
         
         // check for sub-arrays, do recursion
         if (is_array($val)) {
             $val = arrayScanAndTransform($val, $field, $value, $operation);
-            $array[$key] = $val;
         }
         
         // check for matches. if found, operate on the array
