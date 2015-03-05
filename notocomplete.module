@@ -36,7 +36,7 @@ function notocomplete_form_node_type_form_alter(&$form, &$form_state) {
         '#type' => 'radios',
         '#default_value' => NOTOCOMPLETE_ENABLED,
         '#options' => array(
-            NOTOCOMPLETE_ENABLED => t('Set autocomplete off attribute on text inputs'),
+            NOTOCOMPLETE_ENABLED => t('Set "autocomplete=off" attribute on text inputs'),
             NOTOCOMPLETE_DISABLED => t('Do not set autocomplete (make no change)')
         )
     );
