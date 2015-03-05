@@ -10,7 +10,37 @@
  * 
  * @author sean
  */
+
+define('NOTOCOMPLETE_DISABLED', 0);
+define('NOTOCOMPLETE_ENABLED', 1);
  
+/**
+ * Implements hook_form_FORM_ID_alter() for the node type form
+ * 
+ * this will add the notocomplet flag to the node type page. 
+ * approach borrowed from the auto_nodetitle module.
+ */
+function notocomplete_form_node_type_form_alter(&$form, &$form_state) {
+    
+    // create the fieldset
+    $form['notocomplete'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Suppress field history'),
+        '#collapsible' => true,
+        '#collapsed' => true,
+        '#group' => 'additional_settings'
+    );
+    
+    // add the flag toggle to the fieldset
+    $form['notocomplete']['flag'] = array(
+        '#type' => 'radios',
+        '#default_value' => NOTOCOMPLETE_ENABLED,
+        '#options' => array(
+            NOTOCOMPLETE_ENABLED => t('Set autocomplete off attribute on text inputs'),
+            NOTOCOMPLETE_DISABLED => t('Do not set autocomplete (make no change)')
+        )
+    );
+}
  
 /**
  * implements hook_form_alter
