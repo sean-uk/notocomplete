@@ -76,7 +76,7 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
     // (see comments in hook_form_FORM_ID_alter implementation)
     $element_name = NOTOCOMPLETE_FLAG_NAME;
     $type_name = $form_state['node']->type;
-    $noto_setting = variable_get($element_name.'_'.$type_name);
+    $noto_setting = variable_get($element_name.'_'.$type_name, NOTOCOMPLETE_ENABLED);
     
     if( $noto_setting===NOTOCOMPLETE_ENABLED ) {
         // now go over each of the form fields looking for a plain text type
