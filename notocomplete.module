@@ -6,9 +6,6 @@
  * (this is only the *browser* autocomplete which remembmers previous values,
  * it doesn't affect ajax autocomplete, which is what the term usually refers to)
  * 
- * @todo hook field create/edit to make autocomplete off optional
- * @todo make sure this doesn't operate on admin forms.
- * 
  * @author sean
  */
 
@@ -73,15 +70,19 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
         drupal_set_message('Notocomplete: Form not recognised', 'error');
     }
     
-    // find out what content type this is and whether notocomplete is wanted for it.
-    // (see comments in hook_form_FORM_ID_alter implementation)
-    $element_name = NOTOCOMPLETE_FLAG_NAME;
-    $type_name = $form_state['node']->type;
-    $noto_setting = variable_get($element_name.'_'.$type_name, NOTOCOMPLETE_ENABLED);
+    // don't operate on admin forms, or if node info is not present for whatever reason
+    if( !path_is_admin() && !$form_state['node'] ) {
     
-    if( $noto_setting===NOTOCOMPLETE_ENABLED ) {
-        // now go over each of the form fields looking for a plain text type
-        $form = arrayScanAndTransform($form, '#type', 'textfield', 'setAutocomplete');
+        // find out what content type this is and whether notocomplete is wanted for it.
+        // (see comments in hook_form_FORM_ID_alter implementation)
+        $element_name = NOTOCOMPLETE_FLAG_NAME;
+        $type_name = $form_state['node']->type;
+        $noto_setting = variable_get($element_name.'_'.$type_name, NOTOCOMPLETE_ENABLED);
+        
+        if( $noto_setting===NOTOCOMPLETE_ENABLED ) {
+            // now go over each of the form fields looking for a plain text type
+            $form = arrayScanAndTransform($form, '#type', 'textfield', 'setAutocomplete');
+        }
     }
 }
 
