@@ -66,12 +66,12 @@ function notocomplete_node_type_insert($info)
 function notocomplete_form_alter(&$form, &$form_state, $form_id) 
 {
     // sanity - notify user of unknown error
-    if( !$form || empty($form) ) {
+    if(!$form || empty($form)) {
         drupal_set_message('Notocomplete: Form not recognised', 'error');
     }
     
     // don't operate on admin forms, or if node info is not present for whatever reason
-    if( !path_is_admin() && !$form_state['node'] ) {
+    if(!path_is_admin(current_path()) && !$form_state['node']) {
     
         // find out what content type this is and whether notocomplete is wanted for it.
         // (see comments in hook_form_FORM_ID_alter implementation)
@@ -79,7 +79,7 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
         $type_name = $form_state['node']->type;
         $noto_setting = variable_get($element_name.'_'.$type_name, NOTOCOMPLETE_ENABLED);
         
-        if( $noto_setting===NOTOCOMPLETE_ENABLED ) {
+        if($noto_setting===NOTOCOMPLETE_ENABLED) {
             // now go over each of the form fields looking for a plain text type
             $form = arrayScanAndTransform($form, '#type', 'textfield', 'setAutocomplete');
         }
