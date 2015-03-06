@@ -35,7 +35,7 @@ function notocomplete_form_node_type_form_alter(&$form, &$form_state)
     // create the fieldset
     $form['notocomplete'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Suppress field history'),
+        '#title' => t('Suppress browser autocomplete'),
         '#collapsible' => true,
         '#collapsed' => true,
         '#group' => 'additional_settings'
@@ -46,9 +46,10 @@ function notocomplete_form_node_type_form_alter(&$form, &$form_state)
         '#type' => 'radios',
         '#default_value' => $current_val,
         '#options' => array(
-            NOTOCOMPLETE_ENABLED => t('Set "autocomplete=off" attribute on text inputs'),
-            NOTOCOMPLETE_DISABLED => t('Do not set autocomplete (make no change)')
-        )
+            NOTOCOMPLETE_ENABLED => t('Enabled'),
+            NOTOCOMPLETE_DISABLED => t('Disabled')
+        ),
+        '#description' => t('If enabled, the autocomplete="off" attribute will be added to all text inputs on this content type. This refers only to the browser history autocompletion, JavaScript/AJAX autocomplete functionality is not affected. If disabled, no change will be made to text inputs.')
     );
 }
 
