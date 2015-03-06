@@ -20,7 +20,15 @@ define('NOTOCOMPLETE_ENABLED', 1);
  * this will add the notocomplet flag to the node type page. 
  * approach borrowed from the auto_nodetitle module.
  */
-function notocomplete_form_node_type_form_alter(&$form, &$form_state) {
+function notocomplete_form_node_type_form_alter(&$form, &$form_state) 
+{
+    $name = 'noto';
+    
+    // get the set value
+    // the values are appearing in the variable [elementname]_[typename] (ie; noto_blog)
+    // where this is documented I can't find, but I pieced it together from the auto_nodetitle module.
+    $type = $form['#node_type']->type;
+    $current_val = variable_get( $name.'_'.$type, NOTOCOMPLETE_ENABLED );
     
     // create the fieldset
     $form['notocomplete'] = array(
@@ -32,18 +40,28 @@ function notocomplete_form_node_type_form_alter(&$form, &$form_state) {
     );
     
     // add the flag toggle to the fieldset
-    $form['notocomplete']['flag'] = array(
+    $form['notocomplete'][$name] = array(
         '#type' => 'radios',
-        '#default_value' => NOTOCOMPLETE_ENABLED,
+        '#default_value' => $current_val,
         '#options' => array(
             NOTOCOMPLETE_ENABLED => t('Set "autocomplete=off" attribute on text inputs'),
             NOTOCOMPLETE_DISABLED => t('Do not set autocomplete (make no change)')
         )
     );
 }
+
+/**
+ * implements hook_node_type_insert
+ */
+function notocomplete_node_type_insert($info)
+{
+    variable_set('notocomplete_' .$info->type, variable_get('notocomplete_'.$info->type));
+}
  
 /**
  * implements hook_form_alter
+ * 
+ * this does the actual operation of modifying the form settings, where appropriate
  */
 function notocomplete_form_alter(&$form, &$form_state, $form_id) 
 {
