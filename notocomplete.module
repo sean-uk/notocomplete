@@ -22,13 +22,13 @@ define('NOTOCOMPLETE_ENABLED', 1);
  */
 function notocomplete_form_node_type_form_alter(&$form, &$form_state) 
 {
-    $name = 'noto';
+    $element_name = 'noto';
+    $type_name = $form['#node_type']->type;
     
-    // get the set value
-    // the values are appearing in the variable [elementname]_[typename] (ie; noto_blog)
+    // get the set value, defaulting to enabled
+    // the values are being automatically saved in the variable [element_name]_[type_name] (ie; noto_blog)
     // where this is documented I can't find, but I pieced it together from the auto_nodetitle module.
-    $type = $form['#node_type']->type;
-    $current_val = variable_get( $name.'_'.$type, NOTOCOMPLETE_ENABLED );
+    $current_val = variable_get( $element_name.'_'.$type_name, NOTOCOMPLETE_ENABLED );
     
     // create the fieldset
     $form['notocomplete'] = array(
@@ -40,7 +40,7 @@ function notocomplete_form_node_type_form_alter(&$form, &$form_state)
     );
     
     // add the flag toggle to the fieldset
-    $form['notocomplete'][$name] = array(
+    $form['notocomplete'][$element_name] = array(
         '#type' => 'radios',
         '#default_value' => $current_val,
         '#options' => array(
