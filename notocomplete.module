@@ -13,6 +13,7 @@
 
 define('NOTOCOMPLETE_DISABLED', 0);
 define('NOTOCOMPLETE_ENABLED', 1);
+define('NOTOCOMPLETE_FLAG_NAME', 'noto');
  
 /**
  * Implements hook_form_FORM_ID_alter() for the node type form
@@ -22,7 +23,7 @@ define('NOTOCOMPLETE_ENABLED', 1);
  */
 function notocomplete_form_node_type_form_alter(&$form, &$form_state) 
 {
-    $element_name = 'noto';
+    $element_name = NOTOCOMPLETE_FLAG_NAME;
     $type_name = $form['#node_type']->type;
     
     // get the set value, defaulting to enabled
@@ -69,6 +70,12 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
     if( !$form || empty($form) ) {
         drupal_set_message('Notocomplete: Form not recognised', 'error');
     }
+    
+    // find out what content type this is and whether notocomplete is wanted for it.
+    // (see comments in hook_form_FORM_ID_alter implementation)
+    $element_name = NOTOCOMPLETE_FLAG_NAME;
+    $type_name = $form['#node_type']->type;
+    $noto_setting = variable_get($element_name.'_'.$type_name);
     
     // now go over each of the form fields looking for a plain text type
     $form = arrayScanAndTransform($form, '#type', 'textfield', 'setAutocomplete');
