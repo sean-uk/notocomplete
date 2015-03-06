@@ -71,7 +71,7 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
     }
     
     // don't operate on admin forms, or if node info is not present for whatever reason
-    if(!path_is_admin(current_path()) && !$form_state['node']) {
+    if(!path_is_admin(current_path()) && $form_state['node']) {
     
         // find out what content type this is and whether notocomplete is wanted for it.
         // (see comments in hook_form_FORM_ID_alter implementation)
