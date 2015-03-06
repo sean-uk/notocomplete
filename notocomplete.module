@@ -7,6 +7,7 @@
  * it doesn't affect ajax autocomplete, which is what the term usually refers to)
  * 
  * @todo hook field create/edit to make autocomplete off optional
+ * @todo make sure this doesn't operate on admin forms.
  * 
  * @author sean
  */
@@ -74,11 +75,13 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
     // find out what content type this is and whether notocomplete is wanted for it.
     // (see comments in hook_form_FORM_ID_alter implementation)
     $element_name = NOTOCOMPLETE_FLAG_NAME;
-    $type_name = $form['#node_type']->type;
+    $type_name = $form_state['node']->type;
     $noto_setting = variable_get($element_name.'_'.$type_name);
     
-    // now go over each of the form fields looking for a plain text type
-    $form = arrayScanAndTransform($form, '#type', 'textfield', 'setAutocomplete');
+    if( $noto_setting===NOTOCOMPLETE_ENABLED ) {
+        // now go over each of the form fields looking for a plain text type
+        $form = arrayScanAndTransform($form, '#type', 'textfield', 'setAutocomplete');
+    }
 }
 
 /**
