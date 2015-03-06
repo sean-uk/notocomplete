@@ -49,14 +49,6 @@ function notocomplete_form_node_type_form_alter(&$form, &$form_state)
         '#description' => t('If enabled, the autocomplete="off" attribute will be added to all text inputs on this content type. This refers only to the browser history autocompletion, JavaScript/AJAX autocomplete functionality is not affected. If disabled, no change will be made to text inputs.')
     );
 }
-
-/**
- * implements hook_node_type_insert
- */
-function notocomplete_node_type_insert($info)
-{
-    variable_set('notocomplete_' .$info->type, variable_get('notocomplete_'.$info->type));
-}
  
 /**
  * implements hook_form_alter
