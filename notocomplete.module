@@ -12,8 +12,8 @@
  * @author sean
  */
 
-define('NOTOCOMPLETE_DISABLED', 0);
-define('NOTOCOMPLETE_ENABLED', 1);
+define('NOTOCOMPLETE_DISABLED', '0');
+define('NOTOCOMPLETE_ENABLED', '1');
 define('NOTOCOMPLETE_FLAG_NAME', 'noto');
  
 /**
