@@ -6,8 +6,10 @@
  * (this is only the *browser* autocomplete which remembmers previous values,
  * it doesn't affect ajax autocomplete, which is what the term usually refers to)
  * 
- * @todo: field type level overrides
+ * @todo: FINISH field level overrides
  * @todo: uninstall hook, purge all variables
+ * @todo: factor out all these variable_get calls.
+ * @todo: the generic form alter will also need to check if there is a field level override
  * 
  * @author sean
  */
@@ -52,17 +54,61 @@ function notocomplete_form_node_type_form_alter(&$form, &$form_state)
         '#description' => t('If enabled, the autocomplete="off" attribute will be added to all text inputs on this content type. This refers only to the browser history autocompletion, JavaScript/AJAX autocomplete functionality is not affected. If disabled, no change will be made to text inputs.')
     );
 }
+
+/**
+ * @brief insert a field specific setting into the field edit page. 
+ * 
+ * implements hook_form_FORM_ID_alter for the field edit form
+ * 
+ * there is apparently no generic hook to work with field settings forms, you have to hook the form by id.
+ * @see https://api.drupal.org/api/drupal/modules!field_ui!field_ui.api.php/function/hook_field_settings_form/7
+ * @see https://api.drupal.org/api/drupal/modules!field_ui!field_ui.admin.inc/function/field_ui_field_settings_form/7
+ */
+function notocomplete_form_field_ui_field_edit_form_alter(&$form, &$form_state)
+{
+    // get the field name and info
+    $field_name = $form['#field']['field_name'];
+    $info = field_info_field($field_name);
+    
+    $element_name = NOTOCOMPLETE_FLAG_NAME;
+    
+    // find out the node content type and if noto is on for that
+    $type_name = $form['#instance']['#bundle'];
+    $type_noto = variable_get($element_name.'_'.$type_name, NOTOCOMPLETE_ENABLED);
+    
+    // find out if noto is on for this field
+    $field_noto = variable_get($element_name.'_field_'.$field_name, $type_noto);
+    
+    // add the flag toggle to the settings
+    $form['instance']['settings']['notocomplete'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Suppress browser autocomplete'),
+        '#collapsible' => true,
+        '#collapsed' => false,
+        '#group' => 'additional_settings'
+    );
+    $form['instance']['settings']['notocomplete']['toggle'] = array(
+        '#type' => 'radios',
+        '#default_value' => $field_noto,
+        '#options' => array(
+            NOTOCOMPLETE_ENABLED => t('Enabled'),
+            NOTOCOMPLETE_DISABLED => t('Disabled')
+        ),
+        '#description' => t('If enabled, the autocomplete="off" attribute will be added to all text inputs on this content type. This refers only to the browser history autocompletion, JavaScript/AJAX autocomplete functionality is not affected. If disabled, no change will be made to text inputs.')
+    );
+}
  
 /**
- * implements hook_form_alter
+ * @brief this does the actual operation of modifying the form settings, where appropriate
  * 
- * this does the actual operation of modifying the form settings, where appropriate
+ * implements hook_form_alter
  */
 function notocomplete_form_alter(&$form, &$form_state, $form_id) 
 {
     // sanity - notify user of unknown error
     if(!$form || empty($form)) {
         drupal_set_message('Notocomplete: Form not recognised', 'error');
+        return;
     }
     
     // don't operate on admin forms
