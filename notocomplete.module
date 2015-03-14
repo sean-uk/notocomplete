@@ -31,8 +31,6 @@ function notocomplete_form_node_type_form_alter(&$form, &$form_state)
     $type_name = $form['#node_type']->type;
     
     // get the set value, defaulting to enabled
-    // the values are being automatically saved in the variable [element_name]_[type_name] (ie; noto_blog)
-    // where this is documented I can't find, but I pieced it together from the auto_nodetitle module.
     $current_val = noto_var_get($type_name);
     
     // create the fieldset
@@ -181,7 +179,6 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
         if(isset($form['#entity_type']) && $form['#entity_type']=='node' && is_object($form_state['node'])) {
     
             // find out what content type this is and whether notocomplete is wanted for it.
-            // (see comments in hook_form_FORM_ID_alter implementation)
             $type_name = $form_state['node']->type;
             $noto_setting = noto_var_get($type_name);
             
