@@ -242,12 +242,12 @@ function arrayScanAndTransform($array, callable $triggerCheck, callable $operati
  */
 function isElementTrigger($key, $value, $array)
 {
-    if($key='#type' && $value==='textField') {
+    if($key==='#type' && $value==='textfield') {
         
         // find out the field name and node type, check noto values for them
-        if(!array_key_exists('#field_name') || !array_key_exists('#bundle')) {
+        if(!array_key_exists('#field_name',$array) || !array_key_exists('#bundle',$array)) {
             return false;
-        }
+        }   
         $field_name = $array['#field_name'];
         $field_noto = noto_var_get($field_name);
         $node_type = $array['#bundle'];
