@@ -7,8 +7,8 @@
  * it doesn't affect ajax autocomplete, which is what the term usually refers to)
  * 
  * @todo: FINISH field level overrides
- *          - needs a 'default' option, not just on/off
  *          - wire this into the field settings tab as well
+ *          - actually implement the field override! :p
  * @todo: uninstall hook, purge all variables
  * @todo: the generic form alter will also need to check if there is a field level override
  * 
@@ -61,18 +61,18 @@ function notocomplete_form_node_type_form_alter(&$form, &$form_state)
 }
 
 /**
- * @brief insert a field specific setting into the field edit page. 
+ * @brief insert a field specific setting into the field widget edit page. 
  * 
- * implements hook_form_FORM_ID_alter for the field edit form
+ * implements hook_form_FORM_ID_alter for the field widget edit form
  * 
  * there is apparently no generic hook to work with field settings forms, you have to hook the form by id.
  * @see https://api.drupal.org/api/drupal/modules!field_ui!field_ui.api.php/function/hook_field_settings_form/7
  * @see https://api.drupal.org/api/drupal/modules!field_ui!field_ui.admin.inc/function/field_ui_field_settings_form/7
  */
-function notocomplete_form_field_ui_field_edit_form_alter(&$form, &$form_state)
+function notocomplete_form_field_ui_widget_type_form_alter(&$form, &$form_state)
 {
     // get the field name and info
-    $field_name = $form['#field']['field_name'];
+    $field_name = $form['#field_name'];
     $info = field_info_field($field_name);
     
     $element_name = NOTOCOMPLETE_FLAG_NAME;
@@ -101,7 +101,7 @@ function notocomplete_form_field_ui_field_edit_form_alter(&$form, &$form_state)
             NOTOCOMPLETE_NO_OVERRIDE => t('Inherit from content type (currently '.($type_noto?'enabled':'disabled').')' )
         ),
         '#description' => t('If enabled, the autocomplete="off" attribute will be added to all text inputs of this field type. This refers only to the browser history autocompletion, JavaScript/AJAX autocomplete functionality is not affected. If disabled, no change will be made to text inputs.')
-    );
+    );  
     
     // add an additional submit handler beyond whatever the usual is
     $form['#submit'][] = 'noto_field_form_handler';
