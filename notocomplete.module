@@ -100,7 +100,7 @@ function notocomplete_form_field_ui_field_edit_form_alter(&$form, &$form_state)
             NOTOCOMPLETE_DISABLED => t('Disabled'),
             NOTOCOMPLETE_NO_OVERRIDE => t('Inherit from content type (currently '.($type_noto?'enabled':'disabled').')' )
         ),
-        '#description' => t('If enabled, the autocomplete="off" attribute will be added to all text inputs on this content type. This refers only to the browser history autocompletion, JavaScript/AJAX autocomplete functionality is not affected. If disabled, no change will be made to text inputs.')
+        '#description' => t('If enabled, the autocomplete="off" attribute will be added to all text inputs of this field type. This refers only to the browser history autocompletion, JavaScript/AJAX autocomplete functionality is not affected. If disabled, no change will be made to text inputs.')
     );
     
     // add an additional submit handler beyond whatever the usual is
