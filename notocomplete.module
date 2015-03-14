@@ -7,6 +7,8 @@
  * it doesn't affect ajax autocomplete, which is what the term usually refers to)
  * 
  * @todo: FINISH field level overrides
+ *          - needs a 'default' option, not just on/off
+ *          - wire this into the field settings tab as well
  * @todo: uninstall hook, purge all variables
  * @todo: the generic form alter will also need to check if there is a field level override
  * 
