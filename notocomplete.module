@@ -143,10 +143,10 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
  * @param array $array scan for nested arrays in here
  * @param string $field scan for this key
  * @param mixed $value scan for this value (strict)
- * @param string $operation the function to run on matching sub-arrays
+ * @param callable $operation the function to run on matching sub-arrays
  * @return array|bool the modified array, or false on error
  */
-function arrayScanAndTransform($array, $field, $value, $operation)
+function arrayScanAndTransform($array, $field, $value, callable $operation)
 {
     // sanity
     if (!is_array($array)) {
@@ -167,7 +167,7 @@ function arrayScanAndTransform($array, $field, $value, $operation)
         
         // check for matches. if found, operate on the array
         if ($key==$field && $val===$value) {
-            $array = $operation($array);
+            $array = call_user_func($operation, $array);
         }
     }
     

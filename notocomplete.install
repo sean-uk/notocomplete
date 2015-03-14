@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * Create toggle field for module
+ * 
+ * @todo will need to hook content type creation
+ * 
+ * @author sean
+ */
+ 
+ 
+/**
+ * implements hook_install
+ * 
+ * define the toggle field and attach it to content types.
+ */
+function notocomplete_install() 
+{
+    
+    // define the field. We'll use an int, because it's required by core and so bound to exist
+    $field = array(
+        'field_name'    => 'field_notocomplete_active',
+        'description'   => 'Flag to control whether notocomplete applies to a content type',
+        'type'          => 'number_integer',
+        'default'       => 1
+    );
+    
+    // create the field
+    try {
+        field_create_field($field);
+    } catch( FieldException $e ) {
+        drupal_set_message('Unable to create required field.');
+        throw $e;
+    }
+
+    // get the field bundles for all the content types
+    $bundles = field_info_bundles('node');
+    
+    // bind the new field to each of them
+    foreach( $bundles as $name=>$bundle ) {
+        
+        // format params to bundle
+        $instance = array(
+            'field_name' => $field['field_name'],
+            'entity_type' => 'node',
+            'bundle' => $name
+        );
+        
+        try {
+            // ...do the bind
+            field_create_instance($instance);
+        } catch( FieldException $e ) {
+            drupal_set_message('Unable to attach required field.');
+            throw $e;
+        }
+    }
+}
