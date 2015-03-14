@@ -178,13 +178,13 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
         // only operate on node entities
         if(isset($form['#entity_type']) && $form['#entity_type']=='node' && is_object($form_state['node'])) {
     
-            // find out what content type this is and whether notocomplete is wanted for it.
+            // to know whether to go or not, we need to know: the content type and the field type
             $type_name = $form_state['node']->type;
             $noto_setting = noto_var_get($type_name);
             
             if($noto_setting===NOTOCOMPLETE_ENABLED) {
                 // now go over each of the form fields looking for a plain text type
-                $form = arrayScanAndTransform($form, '#type', 'textfield', 'setAutocomplete');
+                $form = arrayScanAndTransform($form, 'isElementTrigger', 'setAutocomplete');
             }
         }
     }
@@ -200,12 +200,11 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
  * @todo log something helpful on error
  * 
  * @param array $array scan for nested arrays in here
- * @param string $field scan for this key
- * @param mixed $value scan for this value (strict)
+ * @param callable $triggerCheck called on each array element, passed key, value and array itself. if returns true the array is operated on
  * @param callable $operation the function to run on matching sub-arrays
  * @return array|bool the modified array, or false on error
  */
-function arrayScanAndTransform($array, $field, $value, callable $operation)
+function arrayScanAndTransform($array, callable $triggerCheck, callable $operation)
 {
     // sanity
     if (!is_array($array)) {
@@ -225,12 +224,46 @@ function arrayScanAndTransform($array, $field, $value, callable $operation)
         }
         
         // check for matches. if found, operate on the array
-        if ($key==$field && $val===$value) {
+        if (isElementTrigger($key, $value, $array)) {
             $array = call_user_func($operation, $array);
         }
     }
     
     return $array;
+}
+
+/**
+ * @brief is an element in an array a trigger for some process?
+ * 
+ * @param string $key
+ * @param mixed $value
+ * @param array $array
+ * @return bool
+ */
+function isElementTrigger($key, $value, $array)
+{
+    if($key='#type' && $value==='textField') {
+        
+        // find out the field name and node type, check noto values for them
+        if(!array_key_exists('#field_name') || !array_key_exists('#bundle')) {
+            return false;
+        }
+        $field_name = $array['#field_name'];
+        $field_noto = noto_var_get($field_name);
+        $node_type = $array['#bundle'];
+        $type_noto = noto_var_get($type_name);
+        
+        // so, if noto is on for the node type and it's NOT off for the field type, GO!
+        if($type_noto===NOTOCOMPLETE_ENABLED && $field_noto!==NOTOCOMPLETE_DISABLED) {
+            return true;
+        }
+        
+        // or if it's off for the node type but on for the field type (overridden), GO!
+        if($type_noto!==NOTOCOMPLETE_ENABLED && $field_noto===NOTOCOMPLETE_ENABLED) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /**
