@@ -8,7 +8,6 @@
  * 
  * @todo: FINISH field level overrides
  * @todo: uninstall hook, purge all variables
- * @todo: factor out all these variable_get calls.
  * @todo: the generic form alter will also need to check if there is a field level override
  * 
  * @author sean
@@ -32,7 +31,7 @@ function notocomplete_form_node_type_form_alter(&$form, &$form_state)
     // get the set value, defaulting to enabled
     // the values are being automatically saved in the variable [element_name]_[type_name] (ie; noto_blog)
     // where this is documented I can't find, but I pieced it together from the auto_nodetitle module.
-    $current_val = variable_get( $element_name.'_'.$type_name, NOTOCOMPLETE_ENABLED );
+    $current_val = noto_var_get($type_name);
     
     // create the fieldset
     $form['notocomplete'] = array(
@@ -73,21 +72,21 @@ function notocomplete_form_field_ui_field_edit_form_alter(&$form, &$form_state)
     $element_name = NOTOCOMPLETE_FLAG_NAME;
     
     // find out the node content type and if noto is on for that
-    $type_name = $form['#instance']['#bundle'];
-    $type_noto = variable_get($element_name.'_'.$type_name, NOTOCOMPLETE_ENABLED);
+    $type_name = $form['#instance']['bundle'];
+    $type_noto = noto_var_get($type_name);
     
-    // find out if noto is on for this field
-    $field_noto = variable_get($element_name.'_field_'.$field_name, $type_noto);
+    // find out if noto is on for this field currently
+    $field_noto = noto_var_get($field_name, $type_noto);
     
     // add the flag toggle to the settings
-    $form['instance']['settings']['notocomplete'] = array(
+    $form['field']['settings']['notocomplete'] = array(
         '#type' => 'fieldset',
         '#title' => t('Suppress browser autocomplete'),
         '#collapsible' => true,
         '#collapsed' => false,
         '#group' => 'additional_settings'
     );
-    $form['instance']['settings']['notocomplete']['toggle'] = array(
+    $form['field']['settings']['notocomplete']['toggle'] = array(
         '#type' => 'radios',
         '#default_value' => $field_noto,
         '#options' => array(
@@ -96,6 +95,31 @@ function notocomplete_form_field_ui_field_edit_form_alter(&$form, &$form_state)
         ),
         '#description' => t('If enabled, the autocomplete="off" attribute will be added to all text inputs on this content type. This refers only to the browser history autocompletion, JavaScript/AJAX autocomplete functionality is not affected. If disabled, no change will be made to text inputs.')
     );
+}
+
+/**
+ * @brief standardised getter for noto settings
+ * @param string $name the name of the field / bundle you're getting
+ * @param int $default
+ * @return int
+ */
+function noto_var_get($name, $default=NOTOCOMPLETE_ENABLED)
+{
+    // get setting with standard prefix, defaulting to enabled
+    return variable_get(NOTOCOMPLETE_FLAG_NAME.'_'.$name, $default);
+}
+ 
+/**
+ * @brief standardised setter for noto settings
+ * 
+ * @param string $name
+ * @param int $setting
+ * @param int $value
+ */
+function noto_var_set($name, $value)
+{
+    // get setting with standard prefix, defaulting to enabled
+    variable_set(NOTOCOMPLETE_FLAG_NAME.'_'.$name, $value);
 }
  
 /**
@@ -119,9 +143,7 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
     
             // find out what content type this is and whether notocomplete is wanted for it.
             // (see comments in hook_form_FORM_ID_alter implementation)
-            $element_name = NOTOCOMPLETE_FLAG_NAME;
-            $type_name = $form_state['node']->type;
-            $noto_setting = variable_get($element_name.'_'.$type_name, NOTOCOMPLETE_ENABLED);
+            $noto_setting = noto_var_get($type_name);
             
             if($noto_setting===NOTOCOMPLETE_ENABLED) {
                 // now go over each of the form fields looking for a plain text type
