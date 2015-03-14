@@ -96,31 +96,6 @@ function notocomplete_form_field_ui_field_edit_form_alter(&$form, &$form_state)
         '#description' => t('If enabled, the autocomplete="off" attribute will be added to all text inputs on this content type. This refers only to the browser history autocompletion, JavaScript/AJAX autocomplete functionality is not affected. If disabled, no change will be made to text inputs.')
     );
 }
-
-/**
- * @brief standardised getter for noto settings
- * @param string $name the name of the field / bundle you're getting
- * @param int $default
- * @return int
- */
-function noto_var_get($name, $default=NOTOCOMPLETE_ENABLED)
-{
-    // get setting with standard prefix, defaulting to enabled
-    return variable_get(NOTOCOMPLETE_FLAG_NAME.'_'.$name, $default);
-}
- 
-/**
- * @brief standardised setter for noto settings
- * 
- * @param string $name
- * @param int $setting
- * @param int $value
- */
-function noto_var_set($name, $value)
-{
-    // get setting with standard prefix, defaulting to enabled
-    variable_set(NOTOCOMPLETE_FLAG_NAME.'_'.$name, $value);
-}
  
 /**
  * @brief this does the actual operation of modifying the form settings, where appropriate
@@ -229,4 +204,29 @@ function setAutocomplete(&$array)
     $array['#attributes']['autocomplete'] = 'off';
     
     return $array;
+}
+
+/**
+ * @brief standardised getter for noto settings
+ * @param string $name the name of the field / bundle you're getting
+ * @param int $default
+ * @return int
+ */
+function noto_var_get($name, $default=NOTOCOMPLETE_ENABLED)
+{
+    // get setting with standard prefix, defaulting to enabled
+    return variable_get(NOTOCOMPLETE_FLAG_NAME.'_'.$name, $default);
+}
+ 
+/**
+ * @brief standardised setter for noto settings
+ * 
+ * @param string $name
+ * @param int $setting
+ * @param int $value
+ */
+function noto_var_set($name, $value)
+{
+    // get setting with standard prefix, defaulting to enabled
+    variable_set(NOTOCOMPLETE_FLAG_NAME.'_'.$name, $value);
 }
