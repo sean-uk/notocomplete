@@ -6,10 +6,9 @@
  * (this is only the *browser* autocomplete which remembmers previous values,
  * it doesn't affect ajax autocomplete, which is what the term usually refers to)
  * 
- * @todo: FINISH field level overrides
- *          - actually implement the field override! :p
  * @todo: uninstall hook, purge all variables
- * @todo: the generic form alter will also need to check if there is a field level override
+ * @todo: the array crawler is now really inefficient, esp. the trigger callable
+ * @todo: automated tests
  * 
  * @author sean
  */
@@ -177,7 +176,7 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
     
         // only operate on node entities
         if(isset($form['#entity_type']) && $form['#entity_type']=='node' && is_object($form_state['node'])) {
-            
+                
             // now go over each of the form fields looking for a plain text type
             $form = arrayScanAndTransform($form, 'isElementTrigger', 'setAutocomplete');
         }
