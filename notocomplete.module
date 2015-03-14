@@ -82,7 +82,7 @@ function notocomplete_form_field_ui_field_edit_form_alter(&$form, &$form_state)
     $type_noto = noto_var_get($type_name);
     
     // find out if noto is on for this field currently
-    $field_noto = noto_var_get($field_name, $type_noto);
+    $field_noto = noto_var_get($field_name, NOTOCOMPLETE_NO_OVERRIDE);
     
     // add the flag toggle to the settings
     $form['field']['settings']['notocomplete'] = array(
@@ -94,7 +94,7 @@ function notocomplete_form_field_ui_field_edit_form_alter(&$form, &$form_state)
     );
     $form['field']['settings']['notocomplete'][$element_name] = array(
         '#type' => 'radios',
-        '#default_value' => NOTOCOMPLETE_NO_OVERRIDE,
+        '#default_value' => $field_noto,
         '#options' => array(
             NOTOCOMPLETE_ENABLED => t('Enabled'),
             NOTOCOMPLETE_DISABLED => t('Disabled'),
