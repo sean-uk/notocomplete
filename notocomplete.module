@@ -220,11 +220,11 @@ function arrayScanAndTransform($array, callable $triggerCheck, callable $operati
         
         // check for sub-arrays, do recursion
         if (is_array($val)) {
-            $val = arrayScanAndTransform($val, $field, $value, $operation);
+            $val = arrayScanAndTransform($val, $triggerCheck, $operation);
         }
         
         // check for matches. if found, operate on the array
-        if (isElementTrigger($key, $value, $array)) {
+        if (isElementTrigger($key, $val, $array)) {
             $array = call_user_func($operation, $array);
         }
     }
