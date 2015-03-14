@@ -177,15 +177,9 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
     
         // only operate on node entities
         if(isset($form['#entity_type']) && $form['#entity_type']=='node' && is_object($form_state['node'])) {
-    
-            // to know whether to go or not, we need to know: the content type and the field type
-            $type_name = $form_state['node']->type;
-            $noto_setting = noto_var_get($type_name);
             
-            if($noto_setting===NOTOCOMPLETE_ENABLED) {
-                // now go over each of the form fields looking for a plain text type
-                $form = arrayScanAndTransform($form, 'isElementTrigger', 'setAutocomplete');
-            }
+            // now go over each of the form fields looking for a plain text type
+            $form = arrayScanAndTransform($form, 'isElementTrigger', 'setAutocomplete');
         }
     }
 }
