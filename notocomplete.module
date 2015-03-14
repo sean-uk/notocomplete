@@ -113,15 +113,15 @@ function noto_field_form_handler($form, $form_state)
 {
     
     if (
-        is_array($form_state['field']['settings']['notocomplete'])      // where the value is
-        && is_string($form['#field']['field_name'])                     // where the field name is
+        is_array($form_state['values']['field']['settings']['notocomplete'])      // where the value is
+        && is_string($form['#field']['field_name'])                               // where the field name is
     ) {
         
         // get the field name
         $field_name = $form['#field']['field_name'];
         
         // get the setting
-        $noto_array = $form_state['field']['settings']['notocomplete'];
+        $noto_array = $form_state['values']['field']['settings']['notocomplete'];
         $val = $noto_array[NOTOCOMPLETE_FLAG_NAME];
         
         noto_var_set($field_name, $val);
