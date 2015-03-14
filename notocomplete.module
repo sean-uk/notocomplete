@@ -7,7 +7,6 @@
  * it doesn't affect ajax autocomplete, which is what the term usually refers to)
  * 
  * @todo: FINISH field level overrides
- *          - wire this into the field settings tab as well
  *          - actually implement the field override! :p
  * @todo: uninstall hook, purge all variables
  * @todo: the generic form alter will also need to check if there is a field level override
@@ -116,15 +115,15 @@ function noto_field_form_handler($form, $form_state)
 {
     
     if (
-        is_array($form_state['values']['field']['settings']['notocomplete'])      // where the value is
+        is_array($form_state['values'])      // where the value is
         && is_string($form['#field']['field_name'])                               // where the field name is
     ) {
         
         // get the field name
-        $field_name = $form['#field']['field_name'];
+        $field_name = $form['#field_name'];
         
         // get the setting
-        $noto_array = $form_state['values']['field']['settings']['notocomplete'];
+        $noto_array = $form_state['values'];
         $val = $noto_array[NOTOCOMPLETE_FLAG_NAME];
         
         noto_var_set($field_name, $val);
