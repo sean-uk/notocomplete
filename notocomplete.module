@@ -150,7 +150,7 @@ function noto_bundle_form_handler($form, $form_state)
         
         // get the setting
         $noto_array = $form_state['values'];
-        $val = $form_state[NOTOCOMPLETE_FLAG_NAME];
+        $val = $noto_array[NOTOCOMPLETE_FLAG_NAME];
         
         noto_var_set($type_name, $val);
         return true;
