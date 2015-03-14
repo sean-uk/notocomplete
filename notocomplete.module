@@ -96,6 +96,18 @@ function notocomplete_form_field_ui_field_edit_form_alter(&$form, &$form_state)
         '#description' => t('If enabled, the autocomplete="off" attribute will be added to all text inputs on this content type. This refers only to the browser history autocompletion, JavaScript/AJAX autocomplete functionality is not affected. If disabled, no change will be made to text inputs.')
     );
 }
+
+/**
+ * @brief submission handler for noto altered forms. It will get the noto fields and set persistent vars
+ * @param array $form
+ * @param array $form_state
+ * @return bool
+ */
+function noto_form_handler($form, $form_state) 
+{
+    // the data we want is in $form_state['values']
+    $values = $form_state['values'];
+}
  
 /**
  * @brief this does the actual operation of modifying the form settings, where appropriate
