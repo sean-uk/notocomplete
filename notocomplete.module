@@ -88,9 +88,8 @@ function notocomplete_form_field_ui_widget_type_form_alter(&$form, &$form_state)
     $form['field']['settings']['notocomplete'] = array(
         '#type' => 'fieldset',
         '#title' => t('Suppress browser autocomplete'),
-        '#collapsible' => true,
-        '#collapsed' => false,
-        '#group' => 'additional_settings'
+        '#group' => 'additional_settings',
+        '#description' => 'This setting applies to this field everywhere it is used.'
     );
     $form['field']['settings']['notocomplete'][$element_name] = array(
         '#type' => 'radios',
