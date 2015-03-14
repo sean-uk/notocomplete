@@ -78,7 +78,7 @@ function notocomplete_form_field_ui_widget_type_form_alter(&$form, &$form_state)
     $element_name = NOTOCOMPLETE_FLAG_NAME;
     
     // find out the node content type and if noto is on for that
-    $type_name = $form['#instance']['bundle'];
+    $type_name = $form['#bundle'];
     $type_noto = noto_var_get($type_name);
     
     // find out if noto is on for this field currently
