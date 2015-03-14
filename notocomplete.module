@@ -17,6 +17,7 @@
 
 define('NOTOCOMPLETE_DISABLED', '0');
 define('NOTOCOMPLETE_ENABLED', '1');
+define('NOTOCOMPLETE_NO_OVERRIDE', '2');
 define('NOTOCOMPLETE_FLAG_NAME', 'noto');
  
 /**
@@ -93,10 +94,11 @@ function notocomplete_form_field_ui_field_edit_form_alter(&$form, &$form_state)
     );
     $form['field']['settings']['notocomplete'][$element_name] = array(
         '#type' => 'radios',
-        '#default_value' => $field_noto,
+        '#default_value' => NOTOCOMPLETE_NO_OVERRIDE,
         '#options' => array(
             NOTOCOMPLETE_ENABLED => t('Enabled'),
-            NOTOCOMPLETE_DISABLED => t('Disabled')
+            NOTOCOMPLETE_DISABLED => t('Disabled'),
+            NOTOCOMPLETE_NO_OVERRIDE => t('Inherit from content type ('.$type_noto?'on':'off'.')' )
         ),
         '#description' => t('If enabled, the autocomplete="off" attribute will be added to all text inputs on this content type. This refers only to the browser history autocompletion, JavaScript/AJAX autocomplete functionality is not affected. If disabled, no change will be made to text inputs.')
     );
