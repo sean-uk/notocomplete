@@ -143,6 +143,7 @@ function notocomplete_form_alter(&$form, &$form_state, $form_id)
     
             // find out what content type this is and whether notocomplete is wanted for it.
             // (see comments in hook_form_FORM_ID_alter implementation)
+            $type_name = $form_state['node']->type;
             $noto_setting = noto_var_get($type_name);
             
             if($noto_setting===NOTOCOMPLETE_ENABLED) {
