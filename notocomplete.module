@@ -141,7 +141,7 @@ function noto_bundle_form_handler($form, $form_state)
 {
     
     if (
-        is_array($form_state)                                           // where the value is
+        is_array($form_state['values'])                                 // where the value is
         && is_string($form['#node_type']->type)                         // where the field name is
     ) {
         
@@ -149,7 +149,7 @@ function noto_bundle_form_handler($form, $form_state)
         $type_name = $form['#node_type']->type;
         
         // get the setting
-        $noto_array = $form_state;
+        $noto_array = $form_state['values'];
         $val = $form_state[NOTOCOMPLETE_FLAG_NAME];
         
         noto_var_set($type_name, $val);
