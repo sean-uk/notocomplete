@@ -116,7 +116,7 @@ function noto_field_form_handler($form, $form_state)
     
     if (
         is_array($form_state['values'])      // where the value is
-        && is_string($form['#field']['field_name'])                               // where the field name is
+        && is_string($form['#field_name'])                               // where the field name is
     ) {
         
         // get the field name
