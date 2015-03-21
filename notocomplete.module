@@ -9,6 +9,7 @@
  * @todo: uninstall hook, purge all variables
  * @todo: the array crawler is now really inefficient, esp. the trigger callable
  * @todo: automated tests
+ * @todo: should also exclude the module from the 'publising settings' type fields which aren't actually node content
  * 
  * @author sean
  */
